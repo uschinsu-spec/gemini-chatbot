@@ -1,26 +1,29 @@
-import sys, os, subprocess, time
+import sys
+import os
+import multiprocessing
 from PyQt6.QtCore import QUrl
 from PyQt6.QtWidgets import QApplication, QMainWindow
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 
-def get_res(rel):
-    return os.path.join(sys._MEIPASS, rel) if hasattr(sys, '_MEIPASS') else os.path.join(os.path.abspath("."), rel)
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Gemini AI Studio")
+        self.setGeometry(100, 100, 1200, 800)
+
+        # Khởi tạo giao diện Web Engine
+        self.browser = QWebEngineView()
+        self.browser.setUrl(QUrl("https://gemini.google.com"))
+        self.setCentralWidget(self.browser)
 
 def main():
-    cmd = [sys.executable, "-m", "streamlit", "run", get_res("app.py"), "--server.headless=true", "--server.port=8501"]
-    proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    time.sleep(2)
-    app = QApplication(sys.argv)
-    win = QMainWindow()
-    win.setWindowTitle("Gemini AI Studio")
-    win.setGeometry(100, 100, 1200, 800)
-    web = QWebEngineView()
-    web.setUrl(QUrl("http://localhost:8501"))
-    win.setCentralWidget(web)
-    win.show()
-    ret = app.exec()
-    proc.kill()
-    sys.exit(ret)
+    # Bắt buộc dùng freeze_support() để tránh lỗi spam cửa sổ liên tục khi đóng gói EXE
+    multiprocessing.freeze_support()
 
-if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())
+
+if __name__ == '__main__':
     main()
