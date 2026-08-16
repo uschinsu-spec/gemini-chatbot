@@ -27,7 +27,7 @@ jobs:
 
       - name: Build Executable
         run: |
-          pyinstaller --noconfirm --onedir --windowed --hidden-import="PyQt6.QtWebEngineWidgets" --collect-all PyQt6 runner.py
+          pyinstaller --noconfirm --onedir --windowed --hidden-import="PyQt6.QtWebEngineWidgets" --collect-all PyQt6 --collect-all PyQt6_WebEngine runner.py
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
